@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import DateTimePicker from './components/DateTimePicker';
+import LocationList from './components/LocationList';
+import TrafficDisplay from './components/TrafficDisplay';
+import WeatherDisplay from './components/WeatherDisplay';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App: React.FC = () => {
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+    const [selectedLocation, setSelectedLocation] = useState<string>('');
+    const [trafficData, setTrafficData] = useState<any>(null);
+    const [weatherData, setWeatherData] = useState<any>(null);
+
+    const locations = [
+        { label: 'Location A', value: 'location_a' },
+        { label: 'Location B', value: 'location_b' },
+    ];
+
+    const handleDateChange = (date: Date) => {
+        setSelectedDate(date);
+        // Fetch and update traffic and weather data
+    };
+
+    const handleLocationChange = (value: string) => {
+        setSelectedLocation(value);
+        // Fetch and update traffic and weather data
+    };
+
+    return (
+        <div>
+            <DateTimePicker onDateChange={handleDateChange} />
+            <LocationList locations={locations} onSelectLocation={handleLocationChange} />
+            <TrafficDisplay trafficData={trafficData} />
+            <WeatherDisplay weatherData={weatherData} />
+        </div>
+    );
+};
 
 export default App;
