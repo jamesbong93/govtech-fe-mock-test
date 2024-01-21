@@ -29,7 +29,7 @@ const App: React.FC = () => {
         <div>
             <DateTimePicker onDateChange={handleDateChange} />
             <LocationList locations={locations} onSelectLocation={handleLocationChange} />
-            <TrafficDisplay trafficData={trafficData} />
+            <TrafficDisplay />
             <WeatherDisplay weatherData={weatherData} />
         </div>
     );
