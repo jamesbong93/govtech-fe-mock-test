@@ -3,14 +3,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { fetchTrafficImagesBegin } from '../features/trafficImages/trafficImagesSlice';
 
+interface TrafficDisplayProps {
+	selectedDate: Date;
+}
 
-const TrafficDisplay: React.FC = () => {
+const TrafficDisplay: React.FC<TrafficDisplayProps> = ({ selectedDate }) => {
 	const dispatch = useDispatch();
 	const { trafficImages, loading, error } = useSelector((state: RootState) => state.trafficImages);
 
 	useEffect(() => {
-		dispatch(fetchTrafficImagesBegin());
-	}, [dispatch]);
+		dispatch(fetchTrafficImagesBegin(selectedDate));
+	}, [dispatch, selectedDate]);
 
 	// Render logic for loading, error, and displaying images
 	if (loading) return <p>Loading...</p>;
@@ -19,8 +22,8 @@ const TrafficDisplay: React.FC = () => {
 	// Render images
 	return (
 		<div>
-			<h3>Traffic Information</h3>
-			<div>
+			<h3>Traffic Information for {selectedDate.toString()}</h3>
+			{trafficImages ? <div>
 				{trafficImages.map((image, index) => (
 					<div key={index}>
 						<p>Camera ID: {image.camera_id}</p>
@@ -32,7 +35,7 @@ const TrafficDisplay: React.FC = () => {
 						<p>Timestamp: {image.timestamp}</p>
 					</div>
 				))}
-			</div>
+			</div> : <div>No traffic images being found</div>}
 		</div>
 	);
 };

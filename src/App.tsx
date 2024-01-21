@@ -17,7 +17,6 @@ const App: React.FC = () => {
 
     const handleDateChange = (date: Date) => {
         setSelectedDate(date);
-        // Fetch and update traffic and weather data
     };
 
     const handleLocationChange = (value: string) => {
@@ -29,7 +28,7 @@ const App: React.FC = () => {
         <div>
             <DateTimePicker onDateChange={handleDateChange} />
             <LocationList locations={locations} onSelectLocation={handleLocationChange} />
-            <TrafficDisplay />
+            <TrafficDisplay selectedDate={selectedDate} />
             <WeatherDisplay weatherData={weatherData} />
         </div>
     );

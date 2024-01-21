@@ -24,11 +24,30 @@ interface ResponseGenerator{
 	json:any,
 }
 
+// Format date to string format YYYY-MM-DD[T]HH:mm:ss
+function formatDateToISOString(date: Date): string {
+	const pad = (num: number): string => num.toString().padStart(2, '0');
+
+	const year = date.getFullYear();
+	const month = pad(date.getMonth() + 1); // getMonth() returns 0-11
+	const day = pad(date.getDate());
+	const hours = pad(date.getHours());
+	const minutes = pad(date.getMinutes());
+	const seconds = pad(date.getSeconds());
+
+	return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+}
+
 // Worker Saga
-function* fetchTrafficImagesSaga() {
-	console.log("fetchTrafficImagesSaga")
+function* fetchTrafficImagesSaga(action: ReturnType<typeof fetchTrafficImagesBegin>) {
   try {
-    const response:ResponseGenerator = yield call(fetch, 'https://api.data.gov.sg/v1/transport/traffic-images');
+		if (!action.payload) {
+			throw new Error('Selected date is null');
+		}
+		const formattedDate: string = formatDateToISOString(action.payload);
+		const url = `https://api.data.gov.sg/v1/transport/traffic-images?date_time=${encodeURIComponent(formattedDate)}`;
+		
+    const response:ResponseGenerator = yield call(fetch, url);
 
     const data: FetchResponse = yield call([response, response.json]);
     

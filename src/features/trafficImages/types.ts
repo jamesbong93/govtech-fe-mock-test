@@ -19,6 +19,7 @@ interface Location {
 
 export interface TrafficImagesState {
   trafficImages: TrafficImage[];
+	selectedDate: Date | null;
   loading: boolean;
   error: string | null;
 }
