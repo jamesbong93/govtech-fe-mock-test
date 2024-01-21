@@ -13,6 +13,10 @@ const TrafficDisplay: React.FC<TrafficDisplayProps> = ({ selectedDate, selectedL
 	const state = useSelector((state: RootState) => state);
 	console.log(state)
 
+	/**
+	 * Represents the TrafficDisplay component.
+	 * @component
+	 */
 	const { trafficImages, locationList, loading, error } = useSelector((state: RootState) => state.trafficImages);
 	useEffect(() => {
 		dispatch(fetchTrafficImagesBegin(selectedDate));
@@ -22,7 +26,6 @@ const TrafficDisplay: React.FC<TrafficDisplayProps> = ({ selectedDate, selectedL
 	if (locationList && selectedLocation === "") {
 		selectedLocation = locationList[0]?.address
 	}
-	console.log("selectedLocation", selectedLocation)
 
 	// Render logic for loading, error, and displaying images
 	if (loading) return <p>Loading...</p>;

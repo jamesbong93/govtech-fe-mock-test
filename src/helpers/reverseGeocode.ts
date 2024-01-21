@@ -1,36 +1,33 @@
+import { fetchFromGoogleGeocoding } from "api/googleAPI";
 import { getLocalStorageCache, setLocalStorageCache } from "./localStorageCache";
 
+/**
+ * Performs reverse geocoding to get a human-readable address from latitude and longitude coordinates.
+ * 
+ * @param {number} lat - The latitude coordinate.
+ * @param {number} lng - The longitude coordinate.
+ * @returns {Promise<string>} - A promise that resolves to the address of the given coordinates.
+ */
 export async function reverseGeocode(lat: number, lng: number): Promise<string> {
-	// TODO: 
-	// Relocate Google API call to the server-side to enhance caching efficiency 
-	// and to secure the API key (keeping it hidden from the client-side).
+    // Construct a unique key for caching based on the latitude and longitude
+    const cacheKey = `geocode:${lat},${lng}`;
 
-	// Verify if the result already exists in the local storage cache to prevent unnecessary duplicate API calls.
-	const cacheKey = `geocode:${lat},${lng}`;
-	const cachedResult = getLocalStorageCache(cacheKey);
-	if (cachedResult) {
-		return Promise.resolve(cachedResult);
-	}
+    // Attempt to retrieve the cached result for these coordinates
+    const cachedResult = getLocalStorageCache(cacheKey);
+    if (cachedResult) {
+      return Promise.resolve(cachedResult);
+    }
 
-	const apiKey = '<REPLACE_WITH_YOUR_GOOGLE_API_KEY>'
-	const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
-	
-	try {
-		const response = await fetch(apiUrl);
-		const data = await response.json();
-		
-		if (data.results.length > 0) {
-			const locationName = data.results[0].formatted_address
+    try {
+        // Fetch the location name using the Google Geocoding API
+        const locationName = await fetchFromGoogleGeocoding(lat, lng);
 
-			// Store in local storage
-			setLocalStorageCache(cacheKey, locationName);
+        // Cache the fetched result for future use
+        setLocalStorageCache(cacheKey, locationName);
 
-			return locationName;
-		} else {
-			return 'Unknown location';
-		}
-	} catch (error) {
-		console.error('Error during reverse geocoding:', error);
-		return 'Error fetching location name';
-	}
+        return locationName;
+    } catch (error) {
+        console.error('Error during reverse geocoding:', error);
+        return 'Error fetching location name';
+    }
 }

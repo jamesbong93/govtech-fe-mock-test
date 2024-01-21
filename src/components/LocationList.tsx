@@ -10,7 +10,7 @@ const LocationList: React.FC<LocationListProps> = ({ onSelectLocation }) => {
 	const { locationList } = useSelector((state: RootState) => state.trafficImages);
 	
 	// Check if the location list is empty
-	if (locationList.length === 0) {
+	if (locationList && locationList.length === 0) {
 		return <p>No locations available.</p>;
 	}
 
@@ -25,4 +25,7 @@ const LocationList: React.FC<LocationListProps> = ({ onSelectLocation }) => {
 	);
 };
 
+/**
+ * Represents a list of locations.
+ */
 export default LocationList;

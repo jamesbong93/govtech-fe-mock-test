@@ -9,13 +9,20 @@ interface DateTimePickerProps {
 const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange }) => {
     const [startDate, setStartDate] = useState<Date>(new Date());
 
+    /**
+     * Handles the change of the date.
+     * @param {Date} date - The selected date.
+     * @returns {void}
+     */
+    const handleDateChange = (date: Date) => {
+        setStartDate(date);
+        onDateChange(date);
+    };
+
     return (
         <DatePicker
             selected={startDate}
-            onChange={(date: Date) => {
-                setStartDate(date);
-                onDateChange(date);
-            }}
+            onChange={handleDateChange}
             showTimeSelect
             dateFormat="Pp"
         />

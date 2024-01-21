@@ -1,48 +1,18 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { 
-	fetchTrafficImagesBegin,
-	fetchTrafficImagesSuccess, 
-	fetchTrafficImagesFailure,
-	setLocationList
+    fetchTrafficImagesBegin,
+    fetchTrafficImagesSuccess, 
+    fetchTrafficImagesFailure,
+    setLocationList
 } from './trafficImagesSlice';
 import { TrafficImage, Location } from './types';
-import { reverseGeocode } from '../../helpers/reverseGeocode';
-import { fetchAreaMetadata, findNearestLocation } from '../../helpers/areaMeta';
-
-interface Item {
-	timestamp: string;
-	cameras: TrafficImage[];
-}
-
-interface ApiInfo {
-	status: string;
-}
-
-interface FetchResponse {
-	items: Item[];
-	api_info: ApiInfo;
-}
-
-interface ResponseGenerator{
-	json:any,
-}
-
-// Format date to string format YYYY-MM-DD[T]HH:mm:ss
-function formatDateToISOString(date: Date): string {
-	const pad = (num: number): string => num.toString().padStart(2, '0');
-
-	const year = date.getFullYear();
-	const month = pad(date.getMonth() + 1); // getMonth() returns 0-11
-	const day = pad(date.getDate());
-	const hours = pad(date.getHours());
-	const minutes = pad(date.getMinutes());
-	const seconds = pad(date.getSeconds());
-
-	return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-}
+import { reverseGeocode } from 'helpers/reverseGeocode';
+import { findNearestLocation } from 'helpers/calculateLocation';
+import { formatDateToISOString } from 'helpers/commons'; 
+import { fetchTrafficImages, fetchWeatherForecastsMetaData } from 'api/govTechDataAPI';
+import { AreaMetadata } from 'features/weatherForecasts/types';
 
 interface Camera {
-    // Define the structure of your Camera object
     location: {
         latitude: number;
         longitude: number;
@@ -50,16 +20,13 @@ interface Camera {
     // ... other properties
 }
 
-interface AreaMetadata  {
-	name: string;
-	label_location: {
-        latitude: number;
-        longitude: number;
-    };
-}
-
+/**
+ * Processes a list of cameras to find their nearest locations and reverse geocode their addresses.
+ * @param {Camera[]} cameras - The list of cameras to process.
+ * @returns {Generator<any, Location[], any>} - A generator yielding an array of Location objects.
+ */
 function* processLocationList(cameras: Camera[]): Generator<any, Location[], any> {
-    const areaMetadata: AreaMetadata[] = yield call(fetchAreaMetadata);
+    const areaMetadata: AreaMetadata[] = yield call(fetchWeatherForecastsMetaData);
     const locationList: Location[] = [];
 
     for (const camera of cameras) {
@@ -74,67 +41,56 @@ function* processLocationList(cameras: Camera[]): Generator<any, Location[], any
             longitude: longitude
         };
 
-        // Add the processed location to the list
         locationList.push(location);
     }
 
-    // Return the final list of locations
     return locationList;
 }
 
-
-// Worker Saga
+/**
+ * Worker Saga: Fetches traffic images and processes their locations.
+ * @param {ReturnType<typeof fetchTrafficImagesBegin>} action - The action payload containing the selected date.
+ */
 function* fetchTrafficImagesSaga(action: ReturnType<typeof fetchTrafficImagesBegin>) {
-	try {
-		if (!action.payload) {
-			throw new Error('Selected date is null');
-		}
-		const formattedDate: string = formatDateToISOString(action.payload);
-		const url = `https://api.data.gov.sg/v1/transport/traffic-images?date_time=${encodeURIComponent(formattedDate)}`;
-		
-		const response:ResponseGenerator = yield call(fetch, url);
+    try {
+        if (!action.payload) {
+            throw new Error('Selected date is null');
+        }
+        const formattedDate: string = formatDateToISOString(action.payload);
+        const trafficImages: TrafficImage[] = yield call(fetchTrafficImages, formattedDate);
 
-		const data: FetchResponse = yield call([response, response.json]);
-	
-	// The 'call' effect is used for calling async functions
+        if (trafficImages && trafficImages.length > 0) {
+            const locationList: Location[] = yield call(processLocationList, trafficImages);
 
-	// Get the first item from response items which contain all the cameras data
-	if (data.items.length > 0) {
-		const cameras = data.items[0].cameras;
+            const updatedTrafficImages = trafficImages?.map(trafficImage => {
+                const location = locationList.find(loc => 
+                    loc.latitude === trafficImage.location.latitude && 
+                    loc.longitude === trafficImage.location.longitude
+                );
 
-		// Resolve locationListpromises and update locationList state
-		const locationList: Location[] = yield call(processLocationList, cameras);
+                return {
+                    ...trafficImage,
+                    location: location || trafficImage.location
+                };
+            });
 
-		// Update each camera with the corresponding location from locationList
-		const updatedCameras = cameras.map(camera => {
-			const location = locationList.find(loc => 
-					loc.latitude === camera.location.latitude && 
-					loc.longitude === camera.location.longitude);
-
-			return {
-					...camera,
-					location: location || camera.location
-			};
-		});
-
-		yield put(setLocationList(locationList));
-
-		yield put(fetchTrafficImagesSuccess(updatedCameras));
-
-	} else {
-		throw new Error('No items found in response');
-	}
-
-	} catch (error) {
-	if (error instanceof Error) {
-		yield put(fetchTrafficImagesFailure(error.message));
-	} else {
-		yield put(fetchTrafficImagesFailure("Something went wrong"));
-	}
-	}
+            yield put(setLocationList(locationList));
+            yield put(fetchTrafficImagesSuccess(updatedTrafficImages));
+        } else {
+            throw new Error('No traffic images found.');
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            yield put(fetchTrafficImagesFailure(error.message));
+        } else {
+            yield put(fetchTrafficImagesFailure("Something went wrong"));
+        }
+    }
 }
 
-// Watcher Saga
+/**
+ * Watcher Saga: Watches for the `fetchTrafficImagesBegin` action and starts the worker saga.
+ */
 export function* watchFetchTrafficImages() {
-	yield takeLatest(fetchTrafficImagesBegin, fetchTrafficImagesSaga);
+    yield takeLatest(fetchTrafficImagesBegin, fetchTrafficImagesSaga);
 }

@@ -1,25 +1,32 @@
 export interface ValidPeriod  {
-	start: Date;
-	end: Date;
+	start: Date | null;
+	end: Date | null;
 }
 
-export interface WeatherForecast {
-	area: string;
+export interface forecast {
 	forecast: string;
+	area: string
+}
+
+export interface WeatherForecasts {
+	forecasts: forecast[];
 	valid_period: ValidPeriod
 }
 
-export interface area_metadata  {
+export interface AreaMetadata  {
 	name: string;
-	location: {};
+	label_location: {
+		latitude: number,
+		longitude: number
+	};
 }
 
 export interface WeatherForecastStates {
-  weatherForecast: WeatherForecast;
+	weatherForecasts: WeatherForecasts;
 	selectedDate: Date | null;
 	selectedArea: string | null;
-  loading: boolean;
-  error: string | null;
+	loading: boolean;
+	error: string | null;
 }
 
 // Action type constants
