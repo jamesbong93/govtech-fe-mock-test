@@ -7,13 +7,6 @@ import WeatherDisplay from './components/WeatherDisplay';
 const App: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [selectedLocation, setSelectedLocation] = useState<string>('');
-    const [trafficData, setTrafficData] = useState<any>(null);
-    const [weatherData, setWeatherData] = useState<any>(null);
-
-    const locations = [
-        { label: 'Location A', value: 'location_a' },
-        { label: 'Location B', value: 'location_b' },
-    ];
 
     const handleDateChange = (date: Date) => {
         setSelectedDate(date);
@@ -21,15 +14,14 @@ const App: React.FC = () => {
 
     const handleLocationChange = (value: string) => {
         setSelectedLocation(value);
-        // Fetch and update traffic and weather data
     };
 
     return (
         <div>
             <DateTimePicker onDateChange={handleDateChange} />
-            <LocationList locations={locations} onSelectLocation={handleLocationChange} />
-            <TrafficDisplay selectedDate={selectedDate} />
-            <WeatherDisplay weatherData={weatherData} />
+            <LocationList onSelectLocation={handleLocationChange} />
+            <TrafficDisplay selectedDate={selectedDate} selectedLocation={selectedLocation} />
+            <WeatherDisplay selectedDate={selectedDate} selectedLocation={selectedLocation} />
         </div>
     );
 };

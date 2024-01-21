@@ -5,36 +5,47 @@ import { fetchTrafficImagesBegin } from '../features/trafficImages/trafficImages
 
 interface TrafficDisplayProps {
 	selectedDate: Date;
+	selectedLocation: string;
 }
 
-const TrafficDisplay: React.FC<TrafficDisplayProps> = ({ selectedDate }) => {
+const TrafficDisplay: React.FC<TrafficDisplayProps> = ({ selectedDate, selectedLocation }) => {
 	const dispatch = useDispatch();
-	const { trafficImages, loading, error } = useSelector((state: RootState) => state.trafficImages);
+	const state = useSelector((state: RootState) => state);
+	console.log(state)
 
+	const { trafficImages, locationList, loading, error } = useSelector((state: RootState) => state.trafficImages);
 	useEffect(() => {
 		dispatch(fetchTrafficImagesBegin(selectedDate));
 	}, [dispatch, selectedDate]);
 
+	// Set selectedLocation to the first location of locationList if not found
+	if (locationList && selectedLocation === "") {
+		selectedLocation = locationList[0]?.address
+	}
+	console.log("selectedLocation", selectedLocation)
+
 	// Render logic for loading, error, and displaying images
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error: {error}</p>;
-
+	
 	// Render images
 	return (
 		<div>
 			<h3>Traffic Information for {selectedDate.toString()}</h3>
 			{trafficImages ? <div>
-				{trafficImages.map((image, index) => (
-					<div key={index}>
-						<p>Camera ID: {image.camera_id}</p>
-						<img 
-							src={image.image} 
-							alt={`Traffic view from camera ${image.camera_id}`}
-							style={{ width: '200px', height: '150px' }} // Standard size
-						/>
-						<p>Timestamp: {image.timestamp}</p>
-					</div>
-				))}
+				{trafficImages.filter(image => image.location.address === selectedLocation)
+                              .map((image, index) => (
+                    <div key={index}>
+
+                        <p>Location: {image.location.address} ({image.location.area})</p>
+                        <img 
+                            src={image.image} 
+                            alt={`Traffic view from camera ${image.camera_id}`}
+                            style={{ width: '200px', height: '150px' }} // Standard size
+                        />
+                        <p>Timestamp: {image.timestamp}</p>
+                    </div>
+                ))}
 			</div> : <div>No traffic images being found</div>}
 		</div>
 	);

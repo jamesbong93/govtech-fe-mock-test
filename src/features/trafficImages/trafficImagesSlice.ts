@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TrafficImage, TrafficImagesState } from './types';
+import { TrafficImage, TrafficImagesState, Location } from './types';
 
 const initialState: TrafficImagesState = {
   trafficImages: [],
   selectedDate: null,
+  selectedLocation: null,
+  locationList: [],
   loading: false,
   error: null,
 };
@@ -24,13 +26,20 @@ const trafficImagesSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    setLocationList: (state, action: PayloadAction<Location[]>) => {
+      state.locationList = action.payload;
+    },
+    setSelectedLocation: (state, action: PayloadAction<string | null>) => {
+      state.selectedLocation = action.payload;
+    }
   },
 });
 
 export const { 
   fetchTrafficImagesBegin, 
   fetchTrafficImagesSuccess, 
-  fetchTrafficImagesFailure 
+  fetchTrafficImagesFailure,
+  setLocationList
 } = trafficImagesSlice.actions;
 
 export default trafficImagesSlice.reducer;

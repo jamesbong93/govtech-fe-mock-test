@@ -12,7 +12,9 @@ interface ImageMetadata {
 	width: number;
 }
 
-interface Location {
+export interface Location {
+	address: string;
+	area: string;
 	latitude: number;
 	longitude: number;
 }
@@ -20,6 +22,8 @@ interface Location {
 export interface TrafficImagesState {
   trafficImages: TrafficImage[];
 	selectedDate: Date | null;
+	selectedLocation: string | null;
+	locationList: Location[];
   loading: boolean;
   error: string | null;
 }
