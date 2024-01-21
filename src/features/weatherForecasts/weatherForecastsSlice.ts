@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WeatherForecasts, WeatherForecastStates } from './types';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { WeatherForecasts, WeatherForecastStates } from "./types";
 
 // Define the shape of the payload for weather forecast actions
 interface WeatherForecastPayload {
@@ -17,14 +17,14 @@ const initialState: WeatherForecastStates = {
     }
   },
   selectedDate: null,
-  selectedArea: '',
+  selectedArea: "",
   loading: false,
   error: null,
 };
 
 // Create a slice for weather forecasts with reducers to handle actions
 const weatherForecastsSlice = createSlice({
-  name: 'WeatherForecasts',
+  name: "WeatherForecasts",
   initialState,
   reducers: {
     // Reducer to handle the beginning of a weather forecasts fetch

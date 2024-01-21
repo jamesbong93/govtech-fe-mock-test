@@ -1,12 +1,12 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from "redux-saga/effects";
 import { 
   fetchWeatherForecastsBegin,
   fetchWeatherForecastsSuccess, 
   fetchWeatherForecastsFailure,
-} from './weatherForecastsSlice';
-import { WeatherForecasts } from './types';
-import { fetchWeatherForecastsItems } from 'api/govTechDataAPI';
-import { formatDateToISOString } from 'helpers/commons';
+} from "./weatherForecastsSlice";
+import { WeatherForecasts } from "./types";
+import { fetchWeatherForecastsItems } from "api/govTechDataAPI";
+import { formatDateToISOString } from "helpers/commons";
 
 /**
  * Worker Saga: Fetches weather forecasts based on the selected date and area.
@@ -18,7 +18,7 @@ function* fetchWeatherForecastsSaga(action: ReturnType<typeof fetchWeatherForeca
 
     // Validate payload data
     if (!selectedDate || !selectedArea) {
-      throw new Error('Selected date or area is null');
+      throw new Error("Selected date or area is null");
     }
 
     const formattedDate: string = formatDateToISOString(selectedDate);
@@ -28,7 +28,7 @@ function* fetchWeatherForecastsSaga(action: ReturnType<typeof fetchWeatherForeca
     if (weatherForecasts) {
       yield put(fetchWeatherForecastsSuccess(weatherForecasts));
     } else {
-      throw new Error('No weather forecast items found');
+      throw new Error("No weather forecast items found");
     }
   } catch (error) {
     // Dispatch failure action in case of any errors

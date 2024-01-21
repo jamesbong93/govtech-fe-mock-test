@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TrafficImage, TrafficImagesState, Location } from './types';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TrafficImage, TrafficImagesState, Location } from "./types";
 
 // Initial state of the traffic images slice
 const initialState: TrafficImagesState = {
@@ -13,7 +13,7 @@ const initialState: TrafficImagesState = {
 
 // Slice for managing traffic images state
 const trafficImagesSlice = createSlice({
-  name: 'trafficImages',
+  name: "trafficImages",
   initialState,
   reducers: {
     // Reducer for initiating the fetch of traffic images

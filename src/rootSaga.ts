@@ -1,6 +1,6 @@
-import { all } from 'redux-saga/effects';
-import { watchFetchTrafficImages } from './features/trafficImages/trafficImagesSagas';
-import { watchFetchWeatherForecasts } from './features/weatherForecasts/weatherForcastsSagas';
+import { all } from "redux-saga/effects";
+import { watchFetchTrafficImages } from "./features/trafficImages/trafficImagesSagas";
+import { watchFetchWeatherForecasts } from "./features/weatherForecasts/weatherForcastsSagas";
 
 
 /**

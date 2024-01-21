@@ -9,25 +9,25 @@ import { getLocalStorageCache, setLocalStorageCache } from "./localStorageCache"
  * @returns {Promise<string>} - A promise that resolves to the address of the given coordinates.
  */
 export async function reverseGeocode(lat: number, lng: number): Promise<string> {
-    // Construct a unique key for caching based on the latitude and longitude
-    const cacheKey = `geocode:${lat},${lng}`;
+  // Construct a unique key for caching based on the latitude and longitude
+  const cacheKey = `geocode:${lat},${lng}`;
 
-    // Attempt to retrieve the cached result for these coordinates
-    const cachedResult = getLocalStorageCache(cacheKey);
-    if (cachedResult) {
-      return Promise.resolve(cachedResult);
-    }
+  // Attempt to retrieve the cached result for these coordinates
+  const cachedResult = getLocalStorageCache(cacheKey);
+  if (cachedResult) {
+    return Promise.resolve(cachedResult as string);
+  }
 
-    try {
-        // Fetch the location name using the Google Geocoding API
-        const locationName = await fetchFromGoogleGeocoding(lat, lng);
+  try {
+    // Fetch the location name using the Google Geocoding API
+    const locationName = await fetchFromGoogleGeocoding(lat, lng);
 
-        // Cache the fetched result for future use
-        setLocalStorageCache(cacheKey, locationName);
+    // Cache the fetched result for future use
+    setLocalStorageCache(cacheKey, locationName);
 
-        return locationName;
-    } catch (error) {
-        console.error('Error during reverse geocoding:', error);
-        return 'Error fetching location name';
-    }
+    return locationName;
+  } catch (error) {
+    console.error("Error during reverse geocoding:", error);
+    return "Error fetching location name";
+  }
 }
