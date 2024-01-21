@@ -30,6 +30,7 @@ const weatherForecastsSlice = createSlice({
     // Reducer to handle the beginning of a weather forecasts fetch
     fetchWeatherForecastsBegin: (state, action: PayloadAction<WeatherForecastPayload>) => {
       state.loading = true;
+      state.error = null;
       state.selectedDate = action.payload.selectedDate;
       state.selectedArea = action.payload.selectedArea;
     },

@@ -19,6 +19,7 @@ const trafficImagesSlice = createSlice({
     // Reducer for initiating the fetch of traffic images
     fetchTrafficImagesBegin: (state, action: PayloadAction<Date | null>) => {
       state.loading = true;
+      state.error = null;
       state.selectedDate = action.payload;
     },
     // Reducer for handling successful fetch of traffic images
