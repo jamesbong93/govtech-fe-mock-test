@@ -12,26 +12,14 @@ import { formatDateToISOString } from "helpers/commons";
 import { fetchTrafficImages, fetchWeatherForecastsMetaData } from "api/govTechDataAPI";
 import { AreaMetadata } from "features/weatherForecasts/types";
 
-interface Camera {
-    location: {
-        latitude: number;
-        longitude: number;
-    };
-    // ... other properties
-}
 
-/**
- * Processes a list of cameras and returns a list of locations.
- * @param cameras - The list of cameras.
- * @returns A promise that resolves to a list of locations.
- */
-async function processLocationList(cameras: Camera[]): Promise<Location[]> {
+async function processLocationList(trafficImages: TrafficImage[]): Promise<Location[]> {
   const areaMetadata: AreaMetadata[] = await fetchWeatherForecastsMetaData();
   const locationList: Location[] = [];
 
-  for (const camera of cameras) {
-    const { latitude, longitude } = camera.location;
-    const nearestLocationArea: string = await findNearestLocation(latitude, longitude, areaMetadata);
+  for (const trafficImage of trafficImages) {
+    const { latitude, longitude } = trafficImage.location;
+    const nearestLocationArea: string = findNearestLocation(latitude, longitude, areaMetadata);
     const locationName: string = await reverseGeocode(latitude, longitude);
 
     const location: Location = {
@@ -43,6 +31,9 @@ async function processLocationList(cameras: Camera[]): Promise<Location[]> {
 
     locationList.push(location);
   }
+
+  // Sort locationList by area in ascending order
+  locationList.sort((a, b) => a.area.localeCompare(b.area));
 
   return locationList;
 }
@@ -56,6 +47,7 @@ function* fetchTrafficImagesSaga(action: ReturnType<typeof fetchTrafficImagesBeg
     if (!action.payload) {
       throw new Error("Selected date is null");
     }
+
     const formattedDate: string = formatDateToISOString(action.payload);
     const trafficImages: TrafficImage[] = yield call(fetchTrafficImages, formattedDate);
 
@@ -65,7 +57,7 @@ function* fetchTrafficImagesSaga(action: ReturnType<typeof fetchTrafficImagesBeg
       const updatedTrafficImages = trafficImages?.map(trafficImage => {
         const location = locationList.find(loc => 
           loc.latitude === trafficImage.location.latitude && 
-                    loc.longitude === trafficImage.location.longitude
+            loc.longitude === trafficImage.location.longitude
         );
 
         return {
