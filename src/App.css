@@ -1,38 +1,142 @@
-.App {
-  text-align: center;
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #f5f5f5; /* Light grey background */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Container for the entire app */
+.app-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  min-height: 100vh;
+}
+
+/* Header styling */
+.app-header {
+  background-color: #1e88e5; /* Modern blue */
+  color: #ffffff;
+  padding: 16px;
+  font-size: 24px;
+  text-align: center;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); /* subtle shadow for depth */
+}
+
+/* Main content styling */
+.app-main {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center children horizontally */
+  justify-content: flex-start; /* align children to the top */
+  gap: 20px; /* spacing between children */
+}
+
+/* Adjusted style for DateTimePicker and LocationList to be side by side */
+.datetime-location-container {
+  display: flex; /* Use flex instead of grid */
+  justify-content: space-around; /* Distribute space evenly */
+  padding: 20px; /* Padding around the container */
+  gap: 20px; /* Space between DateTimePicker and LocationList */
+}
+
+.datetime-location-container > div {
+  background: #ffffff; /* White background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  padding: 16px; /* Padding inside the elements */
+  display: flex; /* Use flex to align items */
+  flex-direction: column; /* Stack elements vertically */
+  justify-content: space-around; /* Distribute space evenly */
+}
+
+/* Style for form elements inside DateTimePicker and LocationList */
+.datetime-location-container input,
+.datetime-location-container select {
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px; /* Rounded borders for inputs and selects */
+  padding: 12px; /* Slightly larger padding for touch friendliness */
+  font-size: 16px; /* Readable font size */
+  width: 100%; /* Full width of parent */
+  margin-bottom: 10px; /* Space between form elements */
+}
+
+/* Use a modern-looking arrow for the select dropdown */
+.datetime-location-container select {
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none;    /* For Firefox */
+  appearance: none;         /* Standard syntax */
+  background: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+
+/* Enhance the visual feedback on hover */
+.datetime-location-container input:hover,
+.datetime-location-container select:hover {
+  border-color: #888;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .datetime-location-container {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+    align-items: center; /* Center items on smaller screens */
+  }
+}
+
+/* Form elements like input, select, button styling */
+input:focus,
+select:focus {
+  outline: none;
+  border: 2px solid #4a90e2; /* Highlight focus with a blue border */
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.4); /* Add a subtle glow effect */
+}
+
+/* Form elements like input, select, button styling */
+input, select, button {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+button {
+  background-color: #1e88e5;
   color: white;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  background-color: #1565c0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Style for the WeatherDisplay and TrafficDisplay components */
+.weather-display, .traffic-display {
+  width: 100%;
+  max-width: 800px; /* adjust based on your layout */
+}
+
+/* This will be your new container for weather and traffic information */
+.info-container {
+  display: flex;
+  flex-wrap: wrap; /* Wrap on smaller screens */
+  justify-content: space-between; /* Add space between the components */
+  align-items: flex-start; /* Align items to the top */
+  gap: 20px; /* Spacing between cards */
+}
+
+/* Adjust the flex properties of the cards */
+.weather-display, .traffic-display {
+  flex: 1; /* Both containers will grow equally */
+  min-width: 250px; /* Minimum width before wrapping */
 }

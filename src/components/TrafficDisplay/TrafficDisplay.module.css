@@ -1,0 +1,80 @@
+/* trafficDisplay.module.css */
+.trafficContainer {
+  max-width: 800px;
+  background: #f4f4f4; /* Light grey background */
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+.trafficContainer:hover {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.trafficTitle {
+  text-align: center;
+  background: #4a90e2; /* Soft blue */
+  color: white; /* White text */
+  padding: 20px;
+  margin: 0;
+  border-radius: 12px 12px 0 0;
+  font-family: 'Arial', sans-serif;
+  font-size: 1.5em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .trafficContainer {
+    margin: 10px;
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  .trafficTitle {
+    font-size: 1.2em;
+  }
+}
+
+/* Assuming .imageCard is the container for both the image and info */
+.imageCard {
+  display: flex; /* Use flexbox to arrange child elements side by side */
+  align-items: center; /* Center items vertically */
+  justify-content: space-between; /* Distribute space between elements */
+  margin: 16px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Adjust the image container size if necessary */
+.trafficImageContainer {
+  flex: 1; /* Allow the image to grow and take up space */
+  display: flex;
+  justify-content: center; /* Center image horizontally */
+  align-items: center; /* Center image vertically */
+}
+
+.trafficImage {
+  max-width: 100%; /* Adjust the size as necessary */
+  max-height: 100%; /* Adjust the height as necessary */
+  height: auto; /* Maintain aspect ratio */
+  display: block;
+}
+
+/* Container for the text information */
+.imageInfo {
+  flex: 1; /* Allow the info to take up equal space as the image */
+  padding: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .imageCard {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+  }
+
+  .trafficImage {
+    max-width: 100%;
+  }
+}

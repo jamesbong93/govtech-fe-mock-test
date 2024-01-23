@@ -3,8 +3,8 @@ import { WeatherForecasts, WeatherForecastStates } from "./types";
 
 // Define the shape of the payload for weather forecast actions
 interface WeatherForecastPayload {
-    selectedDate: Date;
-    selectedArea: string;
+  selectedDate: Date;
+  selectedArea: string;
 }
 
 // Define the initial state for the weather forecasts slice
@@ -12,8 +12,8 @@ const initialState: WeatherForecastStates = {
   weatherForecasts: {
     forecasts: [],
     valid_period: {
-      start: null,
-      end: null
+      start: "",
+      end: ""
     }
   },
   selectedDate: null,

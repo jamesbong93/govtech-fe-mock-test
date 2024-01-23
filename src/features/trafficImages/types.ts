@@ -19,6 +19,15 @@ export interface Location {
 	longitude: number;
 }
 
+export interface GroupedLocations {
+  [area: string]: Location[];
+}
+
+export interface TrafficDisplayProps {
+	selectedDate: Date;
+	selectedLocation: string;
+}
+
 export interface TrafficImagesState {
   trafficImages: TrafficImage[];
 	selectedDate: Date | null;

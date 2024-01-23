@@ -1,6 +1,6 @@
 export interface ValidPeriod  {
-	start: Date | null;
-	end: Date | null;
+	start: string;
+	end: string;
 }
 
 export interface forecast {
@@ -11,6 +11,11 @@ export interface forecast {
 export interface WeatherForecasts {
 	forecasts: forecast[];
 	valid_period: ValidPeriod
+}
+
+export interface WeatherDisplayProps {
+  selectedDate: Date;
+  selectedLocation: string;
 }
 
 export interface AreaMetadata  {

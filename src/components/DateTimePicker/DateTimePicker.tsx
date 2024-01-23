@@ -21,12 +21,15 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange }) => {
   };
 
   return (
-    <DatePicker
-      selected={startDate}
-      onChange={handleDateChange}
-      showTimeSelect
-      dateFormat="Pp"
-    />
+    <div className="datetime-picker-container">
+      <DatePicker
+        selected={startDate}
+        onChange={handleDateChange}
+        showTimeSelect
+        dateFormat="Pp"
+        className="datetime-picker"
+      />
+    </div>
   );
 };
 
