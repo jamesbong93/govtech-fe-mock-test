@@ -20,6 +20,9 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange }) => {
     onDateChange(date);
   };
 
+  // Get current date
+  const currentDate = new Date();
+
   return (
     <div className="datetime-picker-container">
       <DatePicker
@@ -28,6 +31,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ onDateChange }) => {
         showTimeSelect
         dateFormat="Pp"
         className="datetime-picker"
+        maxDate={currentDate} // Set the maximum selectable date to the current date
       />
     </div>
   );
