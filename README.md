@@ -1,5 +1,5 @@
 
-# [Project Name]
+# SG traffic and weather forecast Web application
 This project was bootstrapped with Create React App.
 
 ## Available Scripts
